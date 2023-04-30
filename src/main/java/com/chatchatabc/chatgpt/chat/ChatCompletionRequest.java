@@ -1,5 +1,8 @@
 package com.chatchatabc.chatgpt.chat;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +38,11 @@ public class ChatCompletionRequest {
         this.messages = messages;
     }
 
-    public static ChatCompletionRequest of(String userMessage) {
+    public static ChatCompletionRequest of(@NotNull String userMessage) {
         return of(null, userMessage, null);
     }
 
-    public static ChatCompletionRequest of(String systemMessage, String userMessage, String assistantMessage) {
+    public static ChatCompletionRequest of(@Nullable String systemMessage, @NotNull String userMessage, @Nullable String assistantMessage) {
         ChatCompletionRequest request = new ChatCompletionRequest();
         if (systemMessage != null && !systemMessage.isEmpty()) {
             request.addMessage(ChatMessage.systemMessage(systemMessage));

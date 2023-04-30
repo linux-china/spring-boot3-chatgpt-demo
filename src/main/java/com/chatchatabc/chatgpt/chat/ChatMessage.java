@@ -1,15 +1,17 @@
 package com.chatchatabc.chatgpt.chat;
 
-public record ChatMessage(String role, String content) {
-    public static ChatMessage systemMessage(String content) {
+import org.jetbrains.annotations.NotNull;
+
+public record ChatMessage(@NotNull String role, @NotNull String content) {
+    public static ChatMessage systemMessage(@NotNull String content) {
         return new ChatMessage("system", content);
     }
 
-    public static ChatMessage userMessage(String content) {
+    public static ChatMessage userMessage(@NotNull String content) {
         return new ChatMessage("user", content);
     }
 
-    public static ChatMessage assistantMessage(String content) {
+    public static ChatMessage assistantMessage(@NotNull String content) {
         return new ChatMessage("assistant", content);
     }
 }
