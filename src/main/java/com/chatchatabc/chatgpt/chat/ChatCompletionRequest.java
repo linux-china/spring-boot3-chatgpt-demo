@@ -9,6 +9,7 @@ import java.util.List;
 public class ChatCompletionRequest {
     private String model = "gpt-3.5-turbo";
     private double temperature = 1;
+    private Integer n = 1;
     private List<ChatMessage> messages;
 
     public ChatCompletionRequest() {
@@ -28,6 +29,14 @@ public class ChatCompletionRequest {
 
     public void setTemperature(double temperature) {
         this.temperature = temperature;
+    }
+
+    public Integer getN() {
+        return n;
+    }
+
+    public void setN(Integer n) {
+        this.n = n;
     }
 
     public List<ChatMessage> getMessages() {
