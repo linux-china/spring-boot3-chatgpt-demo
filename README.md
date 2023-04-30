@@ -13,7 +13,7 @@ Spring Boot 3 with ChatGPT demo
 
 # Todo
 
-* ChatGPT API test with [WireMock](https://wiremock.org/)
+* ChatGPT API test with [WireMock](https://wiremock.org/) or `@MockBean`
 
 # References
 
