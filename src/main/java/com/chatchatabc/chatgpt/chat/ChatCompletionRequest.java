@@ -1,11 +1,13 @@
 package com.chatchatabc.chatgpt.chat;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChatCompletionRequest {
     private String model = "gpt-3.5-turbo";
     private double temperature = 1;
