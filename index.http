@@ -1,0 +1,24 @@
+### simple chat
+POST http://localhost:8080/chat
+Content-Type: text/plain
+
+What's Java?
+
+### ChatGPT translation
+POST https://api.openai.com/v1/chat/completions
+Authorization: Bearer {{openai_api_key}}
+Content-Type: application/json
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "system",
+      "content": "I want you to act as an English to Chinese translator."
+    },
+    {
+      "role": "user",
+      "content": "Hello, how are you?"
+    }
+  ]
+}
