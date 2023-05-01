@@ -4,16 +4,12 @@ Spring Boot 3 with ChatGPT demo
 # Features
 
 * Spring HTTP Interface to ChatGPT
-* Reactive support
+* Spring Reactive friendly
 
 # Get started
 
 * Modify `application.properties` to set your OpenAI API key or set the environment variable `OPENAI_API_KEY`
 * Run `mvn spring-boot:run`
-
-# Todo
-
-* ChatGPT API test with [WireMock](https://wiremock.org/) or `@MockBean`
 
 # References
 
