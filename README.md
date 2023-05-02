@@ -16,3 +16,4 @@ Spring Boot 3 with ChatGPT demo
 * ChatGPT OpenAPI: https://platform.openai.com/docs/api-reference/chat
 * Spring HTTP
   Interface: https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-http-interface
+* Creating Scalable OpenAI GPT Applications in Java: https://dzone.com/articles/creating-scalable-openai-gpt-applications-in-java
