@@ -1,10 +1,12 @@
 Spring Boot 3 with ChatGPT demo
 ===============================
+              
+Please refer [Spring Boot 3应用如何整合ChatGPT](https://linux-china.davao.page/blog/2023-05-01-spring-boot3-chatgpt) blog.
 
 # Features
 
-* Spring HTTP Interface to ChatGPT
-* Spring Reactive friendly
+* Spring HTTP Interface to ChatGPT REST API
+* Spring Reactive friendly: async and non-blocking
 
 # Get started
 
