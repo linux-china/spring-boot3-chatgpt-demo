@@ -22,3 +22,36 @@ Content-Type: application/json
     }
   ]
 }
+
+### ChatGPT function call
+POST https://api.openai.com/v1/chat/completions
+Authorization: Bearer {{OPENAI_API_KEY}}
+Content-Type: application/json
+
+{
+  "model": "gpt-3.5-turbo-0613",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Give me a simple Java example, and compile the generated source code."
+    }
+  ],
+  "functions": [
+    {
+      "name": "compile_java",
+      "description": "Compile Java source file",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "java file name or source code"
+          }
+        },
+        "required": [
+          "source"
+        ]
+      }
+    }
+  ]
+}
