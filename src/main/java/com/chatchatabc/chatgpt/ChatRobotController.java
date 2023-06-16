@@ -17,6 +17,6 @@ public class ChatRobotController {
     @PostMapping("/chat")
     public Mono<String> chat(@RequestBody String content) {
         return chatGPTService.chat(ChatCompletionRequest.of(content))
-                .map(chatCompletionResponse -> chatCompletionResponse.getReply().content());
+                .map(chatCompletionResponse -> chatCompletionResponse.getReply().getContent());
     }
 }
