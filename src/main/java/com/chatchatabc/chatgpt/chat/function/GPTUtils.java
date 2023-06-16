@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
@@ -22,7 +25,7 @@ public class GPTUtils {
      * @param clazz Java Class
      * @return GPT functions
      */
-    public static Map<String, JsonSchemaFunction> extractFunctions(Class<?> clazz) {
+    public static Map<String, JsonSchemaFunction> extractFunctions(Class<?> clazz) throws Exception {
         Map<String, JsonSchemaFunction> functionDeclares = new HashMap<>();
         for (Method method : clazz.getMethods()) {
             //check GPT function or not
@@ -46,7 +49,14 @@ public class GPTUtils {
                         if (fieldName.isEmpty()) {
                             fieldName = field.getName();
                         }
-                        gptFunction.addProperty(fieldName, fieldType, functionParamAnnotation.value());
+                        if (fieldType.equals("array")) {
+                            Class<?> actualClazz = parseInferredClass(field.getGenericType());
+                            gptFunction.addArrayProperty(fieldName, getJsonSchemaType(actualClazz), functionParamAnnotation.value());
+                        } else if (fieldType.equals("object")) {
+                            throw new Exception("Object type not supported: " + clazz.getName() + "." + field.getName());
+                        } else {
+                            gptFunction.addProperty(fieldName, fieldType, functionParamAnnotation.value());
+                        }
                         if (functionParamAnnotation.required()) {
                             gptFunction.addRequired(fieldName);
                         }
@@ -67,8 +77,12 @@ public class GPTUtils {
         } else if (clazz.equals(Double.class) || clazz.equals(double.class)
                 || clazz.equals(Float.class) || clazz.equals(float.class)) {
             return "number";
-        } else {
+        } else if (clazz.equals(String.class)) {
             return "string";
+        } else if (clazz.equals(List.class)) {
+            return "array";
+        } else {
+            return "object";
         }
     }
 
@@ -97,6 +111,39 @@ public class GPTUtils {
         final Class<?> parameterType = javaMethod.getParameterTypes()[0];
         final Object param = objectMapper.readValue(argumentsJson, parameterType);
         return javaMethod.invoke(target, param);
+    }
+
+    private static Class<?> parseInferredClass(Type genericType) {
+        Class<?> inferredClass = null;
+        if (genericType instanceof ParameterizedType) {
+            ParameterizedType type = (ParameterizedType) genericType;
+            Type[] typeArguments = type.getActualTypeArguments();
+            if (typeArguments.length > 0) {
+                final Type typeArgument = typeArguments[0];
+                if (typeArgument instanceof ParameterizedType) {
+                    inferredClass = (Class<?>) ((ParameterizedType) typeArgument).getActualTypeArguments()[0];
+                } else if (typeArgument instanceof Class) {
+                    inferredClass = (Class<?>) typeArgument;
+                } else {
+                    String typeName = typeArgument.getTypeName();
+                    if (typeName.contains(" ")) {
+                        typeName = typeName.substring(typeName.lastIndexOf(" ") + 1);
+                    }
+                    if (typeName.contains("<")) {
+                        typeName = typeName.substring(0, typeName.indexOf("<"));
+                    }
+                    try {
+                        inferredClass = Class.forName(typeName);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        if (inferredClass == null && genericType instanceof Class) {
+            inferredClass = (Class<?>) genericType;
+        }
+        return inferredClass;
     }
 
 }
