@@ -24,7 +24,9 @@ public class ChatGPTServiceTest extends ProjectBaseTest {
         final Mono<ChatCompletionResponse> response = chatGPTService.chat(ChatCompletionRequest.of("What is Java?"));
         StepVerifier.create(response)
                 .consumeNextWith(chatCompletionResponse -> {
-                    System.out.println(chatCompletionResponse.getReply().getContent());
+                    for (ChatMessage chatMessage : chatCompletionResponse.getReply()) {
+                        System.out.println(chatMessage.getContent());
+                    }
                 })
                 .verifyComplete();
     }
@@ -35,9 +37,11 @@ public class ChatGPTServiceTest extends ProjectBaseTest {
         String functionsJson = GPTUtils.toFunctionsJsonArray(List.of(jsonSchemaFunctionMap.get("compile_java")));
         final ChatCompletionRequest chatRequest = ChatCompletionRequest.functions("Give me a simple Java example, and compile the generated source code.", functionsJson);
         final ChatCompletionResponse response = chatGPTService.chat(chatRequest).block();
-        final FunctionCall functionCall = response.getReply().getFunctionCall();
-        if (functionCall != null) {
-            GPTUtils.callGPTFunction(functionsStub, jsonSchemaFunctionMap.get(functionCall.getName()), functionCall.getArguments());
+        for (ChatMessage chatMessage : response.getReply()) {
+            final FunctionCall functionCall = chatMessage.getFunctionCall();
+            if (functionCall != null) {
+                GPTUtils.callGPTFunction(functionsStub, jsonSchemaFunctionMap.get(functionCall.getName()), functionCall.getArguments());
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.chatchatabc.chatgpt;
 
 import com.chatchatabc.chatgpt.chat.ChatCompletionRequest;
 import com.chatchatabc.chatgpt.chat.ChatGPTService;
+import com.chatchatabc.chatgpt.chat.ChatMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ public class ChatRobotController {
     @PostMapping("/chat")
     public Mono<String> chat(@RequestBody String content) {
         return chatGPTService.chat(ChatCompletionRequest.of(content))
-                .map(chatCompletionResponse -> chatCompletionResponse.getReply().getContent());
+                .map(chatCompletionResponse -> chatCompletionResponse.getReply())
+                .map(chatMessages -> String.join("", chatMessages.stream().map(ChatMessage::getContent).toList()));
     }
 }

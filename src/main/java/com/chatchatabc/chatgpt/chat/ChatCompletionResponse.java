@@ -32,8 +32,8 @@ public class ChatCompletionResponse {
         this.choices = choices;
     }
 
-    public ChatMessage getReply() {
+    public List<ChatMessage> getReply() {
         if (this.choices == null || this.choices.isEmpty()) return null;
-        return this.choices.get(0).getMessage();
+        return this.choices.stream().map(ChatCompletionChoice::getMessage).toList();
     }
 }
