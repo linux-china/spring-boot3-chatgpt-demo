@@ -68,6 +68,14 @@ public class ChatCompletionRequest {
         return of(null, userMessage, null);
     }
 
+    public static ChatCompletionRequest functions(@NotNull String userMessage, String functionsJsonArray) {
+        final ChatCompletionRequest request = new ChatCompletionRequest();
+        request.setModel("gpt-3.5-turbo-0613");
+        request.setFunctions(functionsJsonArray);
+        request.addMessage(ChatMessage.userMessage(userMessage));
+        return request;
+    }
+
     public static ChatCompletionRequest of(@Nullable String systemMessage, @NotNull String userMessage, @Nullable String assistantMessage) {
         ChatCompletionRequest request = new ChatCompletionRequest();
         if (systemMessage != null && !systemMessage.isEmpty()) {
