@@ -1,6 +1,7 @@
 package com.chatchatabc.chatgpt.chat;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,6 +13,12 @@ public class ChatCompletionRequest {
     private String model = "gpt-3.5-turbo";
     private double temperature = 1;
     private Integer n = 1;
+
+    /**
+     * functions with json array
+     */
+    @JsonRawValue
+    private String functions;
     private List<ChatMessage> messages;
 
     public ChatCompletionRequest() {
@@ -47,6 +54,14 @@ public class ChatCompletionRequest {
 
     public void setMessages(List<ChatMessage> messages) {
         this.messages = messages;
+    }
+
+    public String getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(String functions) {
+        this.functions = functions;
     }
 
     public static ChatCompletionRequest of(@NotNull String userMessage) {
