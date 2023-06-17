@@ -1,16 +1,15 @@
 package com.chatchatabc.chatgpt.chat;
 
 import com.chatchatabc.chatgpt.ProjectBaseTest;
-import com.chatchatabc.chatgpt.chat.function.GPTUtils;
-import com.chatchatabc.chatgpt.chat.function.JsonSchemaFunction;
-import com.chatchatabc.chatgpt.service.GPTFunctions;
+import com.chatchatabc.chatgpt.app.service.GPTFunctions;
 import org.junit.jupiter.api.Test;
+import org.mvnsearch.chatgpt.model.ChatCompletionRequest;
+import org.mvnsearch.chatgpt.model.ChatCompletionResponse;
+import org.mvnsearch.chatgpt.model.ChatMessage;
+import org.mvnsearch.chatgpt.spring.service.ChatGPTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.List;
-import java.util.Map;
 
 public class ChatGPTServiceTest extends ProjectBaseTest {
 
@@ -31,17 +30,4 @@ public class ChatGPTServiceTest extends ProjectBaseTest {
                 .verifyComplete();
     }
 
-    @Test
-    public void testFunctions() throws Exception {
-        final Map<String, JsonSchemaFunction> jsonSchemaFunctionMap = GPTUtils.extractFunctions(GPTFunctions.class);
-        String functionsJson = GPTUtils.toFunctionsJsonArray(List.of(jsonSchemaFunctionMap.get("compile_java")));
-        final ChatCompletionRequest chatRequest = ChatCompletionRequest.functions("Give me a simple Java example, and compile the generated source code.", functionsJson);
-        final ChatCompletionResponse response = chatGPTService.chat(chatRequest).block();
-        for (ChatMessage chatMessage : response.getReply()) {
-            final FunctionCall functionCall = chatMessage.getFunctionCall();
-            if (functionCall != null) {
-                GPTUtils.callGPTFunction(functionsStub, jsonSchemaFunctionMap.get(functionCall.getName()), functionCall.getArguments());
-            }
-        }
-    }
 }
