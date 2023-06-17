@@ -1,4 +1,4 @@
-package com.chatchatabc.chatgpt;
+package com.chatchatabc.chatgpt.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
